@@ -14,7 +14,7 @@ closeBTN.addEventListener('click',()=>{
     }
 });
 document.querySelector('.home').addEventListener('click',()=>{
-    window.location.href = "struct.html";
+    window.location.href = "index.html";
 });
 document.querySelector('.Accessor').addEventListener('click',()=>{
     window.location.href = "Authenticator.html";
