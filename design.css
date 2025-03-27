@@ -29,10 +29,10 @@ h1{
     border-right:2px solid #b36c02;
 }
 #logo{
-    background-image:url("logo.png");
+    background-image:url("assets/logo.png");
 }
 #build{
-    background-image:url("build.jpg");
+    background-image:url("assets/build.jpg");
 }
 .image{
     width:100%;
