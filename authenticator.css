@@ -1,0 +1,146 @@
+body {
+    background-color: #FFF5E4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    animation:fadein 1s ease;
+}
+@keyframes fadein{
+    from{
+        opacity:0.5;
+    }
+    to{
+        opacity:1;
+    }
+}
+hr{
+    width:75%;
+    height:1.2px;
+    background-color: #a86706;
+    margin:0vh 0vh 2vh 0vh;
+    border:none;
+}
+.login-container {
+    margin: 6vh 0vh 0vh 0vh;
+    padding: 4vh 4vh 4vh 4vh;
+    background-color: white;
+    width: 55vh;
+    height:60vh;
+    border-radius: 10%;
+    box-shadow: 0px 0px 10px 0px rgb(49, 49, 49);
+    justify-self: center;
+    justify-content: space-between;
+}
+#head{
+    font-weight:bold;
+    text-align:left;
+    font-size:5vh;
+    margin-bottom:1.5vh;
+}
+form input{
+    border:none;
+    border-radius:2vh;
+    border-bottom:.5vh solid grey;
+    border-right:.5vh solid grey;
+    width:50vh;
+    height:4vh;
+    padding-left:.5vh;
+    margin-bottom:.5vh;
+}
+.age{
+    width:13vh;
+    margin-right:5vh;
+}
+.dob{
+    width:27.96vh;
+    margin-right:5vh;
+}
+form span,label{
+    margin-right:13vh;
+}
+button {
+    margin: 3vh 0vh 0vh 0vh;
+    background-color: #FFA725;
+    width: 54vh;
+    height: 7vh;
+    border-radius: 3vh;
+    border-top: none;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    font-size: medium;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.2); 
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FF8C00; 
+}
+.orange{
+    background-color: #FF8C00;
+    border-radius:100vh;
+    box-shadow:.1vh .1vh .1vh .1vh grey;
+    animation:bubble 10s ease infinite;
+}
+#loc{
+    width:40vh;
+    height:40vh;
+    position:absolute;
+    top:10vh;
+    left:10vh;
+}
+#loc1{
+    width:40vh;
+    height:40vh;
+    position:absolute;
+    top:60vh;
+    right:10vh;
+}
+#loc2{
+    width:40vh;
+    height:40vh;
+    position:absolute;
+    top:-10vh;
+    right:-10vh;
+}
+#loc3{
+    width:40vh;
+    height:40vh;
+    position:absolute;
+    top:70vh;
+    left:50vh;
+    z-index:-1;
+}
+@keyframes bubble{
+    0%{
+        width:40vh;
+        height:40vh;
+        background-color:#FFA725;
+        opacity:1;
+    }
+    25%{
+        width:45vh;
+        height:45vh;
+        background-color:#fc9516;
+        opacity:.7;
+    }
+    50%{
+        width:40vh;
+        height:40vh;
+        background-color:#fd900c;
+        opacity:.5;
+    }
+    75%{
+        width:35vh;
+        height:35vh;
+        background-color:#e88d05;
+        opacity:.3;
+    }
+    100%{
+        width:40vh;
+        height:40vh;
+        background-color:#FFA725;
+        opacity:1;
+    }
+    
+}

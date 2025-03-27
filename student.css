@@ -1,0 +1,73 @@
+body{
+    background-color:#FFF5E4;
+    animation:fadein 1s ease;
+}
+@keyframes fadein{
+    from{
+        opacity:0.5;
+    }
+    to{
+        opacity:1;
+    }
+}
+.container {
+    margin: 6vh 0vh 0vh 0vh;
+    padding: 2vh 4vh 4vh 4vh;
+    background-color: white;
+    width: 55vh;
+    height:60vh;
+    border-radius: 10%;
+    box-shadow: 0px 0px 10px 0px rgb(49, 49, 49);
+    justify-self: center;
+    justify-content: space-between;
+}
+hr{
+    width:85%;
+    height:1px;
+    background-color: #a86706;
+    margin:0vh 0vh 3vh 0vh;
+    border:none;
+}
+#head{
+    text-align:left;
+    font-size:5vh;
+    font-weight:bold;
+    padding:0vh;
+    margin:2vh 0vh 2vh 0vh;
+}
+.AgeRoll{
+    width:21vh;
+    margin:0vh 3vh 1vh 0vh;
+}
+.AgeRoll1{
+    margin:0vh 17vh 0vh 0vh;
+}
+.textarea1{
+    margin:0vh 20vh 0vh 0vh;
+    display: inline;
+}
+.textarea{
+    width:100%;
+    margin:0vh 0vh 1vh 0vh;
+}
+form select{
+    height:5.5vh;
+    width:14vh;
+    margin:0vh 0vh 1vh 0vh;
+}
+form input,select{
+    border-radius:5vh;
+    border:none;
+    border-right:.5vh solid grey;
+    border-bottom:.5vh solid grey;
+}
+.button{
+    margin:3vh 0vh 0vh 0vh;
+    background-color:#FFA725;
+    width:54vh;
+    height:7vh;
+    border-radius:3vh;
+    border:none;
+    border-bottom:.5vh solid #b36c02;
+    border-right:.5vh solid #b36c02;
+}

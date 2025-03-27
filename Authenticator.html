@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login page for the Authenticator application.">
+    <title>Authenticator</title>
+    <link rel="stylesheet" href="authenticator.css">
+</head>
+<body>
+    <div class="login-container">
+        <div id="head">Authenticator</div>
+        <Hr>
+        <form id="loginForm" method="POST" action="/submit-login">
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username" placeholder="Name" required />
+                <span>Age:</span>
+                <span>Date Of Birth:</span>
+                <input type="textarea" class="age" placeholder="Age">
+                <input type="textarea" class="dob" placeholder="DD/MM/YYYY">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Password" required />
+            <label for="Email">Email:</label>
+            <input type="textarea" id="Email" placeholder="abc@gmail.com" required />
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="orange" id="loc"></div>
+    <div class="orange" id="loc1"></div>
+    <div class="orange" id="loc2"></div>
+    <div class="orange" id="loc3"></div>
+</body>
+</html>

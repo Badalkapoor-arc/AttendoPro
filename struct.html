@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>minor_project</title>
+        <link rel="stylesheet" href="design.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+        <div class="TPC_image">
+            <div class="image" id="logo"></div>
+            <div class="image" id="build"></div>
+        </div>
+        
+        <div class="menu">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        
+        <form id="form1">
+            <h1>Class Information</h1>
+            <hr>
+            <div class="class">Branch:</div>
+            <div class="semester">Semester:</div>
+            <select id="class">
+                <option>CSE</option>
+                <option>ELECTRICAL</option>
+                <option>ARCHITECHTURE</option>
+                <option>MECH</option>
+                <option>CIVIL</option>
+            </select>
+            <select id="sem">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+            </select>
+            <div class="password1">Password:</div>
+            <input class="password" type="password" required/>
+            <button id="btn">submit</button>
+        </form>
+        <div id="menuBar">
+            <div class="closeMenu">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <span id="head">AttendoPRO</span>
+            <hr>
+            <div class="option" class="home">
+                <i class="fa-solid fa-home" class="home"></i>
+                <span class="home">Home</span>
+            </div>
+            <div class="option" class="Accessor">
+                <i class="fa-solid fa-user-plus" class="Accessor"></i>
+                <span class="Accessor">Add Accessor</span>
+            </div>
+            <div class="option" class="student">
+                <i class="fa-solid fa-plus" class="plus" class="student"></i>
+                <span class="student">Add Student</span>
+            </div>
+            <div class="option" class="about">
+                <i class="fa-solid fa-circle-info" class="about"></i>
+                <span class="about">About</span>
+            </div>
+            <hr id="closure">
+        </div>
+        <script src="backend.js"></script>
+    </body>
+</html>
