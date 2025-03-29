@@ -5,7 +5,7 @@ let menuBar1 = document.querySelector('#menuBar1');
 let password = document.querySelector(".password");
 let submitBTN = document.querySelector('#btn');
 let form = document.querySelector("form");
-let key = "T20P16C3";
+let passkey = "T20P16C3";
 menuBTN.addEventListener('click',()=>{
     menuBar.setAttribute("id","menuBar1");
 });
@@ -30,7 +30,7 @@ document.querySelector('.about').addEventListener('click',()=>{
     window.location.href = "about.html";
 });
 submitBTN.addEventListener("click", () => {
-    if (password.value.toString() === key.toString()) {
+    if (password.value.toString() === passkey.toString()) {
         console.log(password.value.toString());
         form.method="form";
         form.action="infoCheck.html";
