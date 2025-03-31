@@ -38,4 +38,4 @@ submitBTN.addEventListener("click", () => {
         alert("Incorrect password or password field is empty");
     }
 });
-console.log(key.toString());
+console.log(passkey.toString());
