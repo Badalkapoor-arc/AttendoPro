@@ -16,6 +16,11 @@ body{
     justify-content:start;
     border-bottom:2px solid #8f5602;
     border-right:2px solid #8f5602;
+    overflow-y:auto;
+    margin-right:-10px;
+}
+#container::-webkit-scrollbar{
+    width:0px;
 }
 span{
     font-family:'comic sans ms';
@@ -31,7 +36,7 @@ span{
     flex-direction:column;
     font-size:medium;
     width:130%;
-    height:20%;
+    height:90px;
     color:#a5752d;
     background-color:#f6d39f;
     border:none;
@@ -40,7 +45,9 @@ span{
     padding:5px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     animation:fadein 1s;
+    transition:1s;
 }
+
 .infoarea:hover {
     transform: translateY(-9px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);

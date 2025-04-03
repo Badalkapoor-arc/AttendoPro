@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    animation:fadein 1s ease;
+    animation:fadein 2s ease;
 }
 @keyframes fadein{
     from{
@@ -80,7 +80,7 @@ button:hover {
     background-color: #FF8C00;
     border-radius:100vh;
     box-shadow:.1vh .1vh .1vh .1vh grey;
-    animation:bubble 10s ease infinite;
+    animation:bubble 5s ease-in infinite;
 }
 #loc{
     width:40vh;
