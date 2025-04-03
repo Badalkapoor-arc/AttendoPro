@@ -78,6 +78,7 @@ parser.on('data', (data) => {
 });
 let instruction;
 while(min!=10){
+    instruction = 1; 
     sendInstructionToArduino(instruction);
     parser.on();
 }
