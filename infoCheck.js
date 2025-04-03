@@ -1,3 +1,5 @@
+const { resolve } = require("path");
+
 let sec=0;
 let min=0;
 let secinner= document.querySelector(".sec");
@@ -48,12 +50,35 @@ const getStudent=(fingerprintId)=>{
     </div>
 `;
 }
-// while(min!=10){
-//     fingerprintId;//get the fingerprintId from the fingerprint scanner
-//     getStudent(fingerprintId);
-// }
-getStudent("fingerprintId1");
-getStudent("fingerprintId2");
-getStudent("fingerprintId3");
-
+const port = new SerialPort({ path: 'COM4', baudRate: 9600 });
+const parser = async ()=>{
+    await port.pipe(new ReadlineParser({ delimiter: '\n' }));
+};
+const sendInstructionToArduino = async(instruction) => {
+    if (!instruction) {
+        console.error('No instruction provided to send to Arduino.');
+        return;
+    }
+    return new Promise((resolve, reject) => {
+        port.write(instruction + '\n', (err) => {
+            if (err) {
+                console.error('Error writing to Arduino:', err.message);
+                reject(err);
+            } else {
+                console.log('Instruction sent to Arduino:', instruction);
+                resolve();
+            }
+        });
+    });
+};
+parser.on('data', (data) => {
+    console.log('Data received from Arduino:', data.trim());
+    fingerprintId = data.trim();
+    getStudent(fingerprintId);
+});
+let instruction;
+while(min!=10){
+    sendInstructionToArduino(instruction);
+    parser.on();
+}
 
