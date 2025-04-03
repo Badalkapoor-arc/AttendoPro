@@ -1,5 +1,3 @@
-const { resolve } = require("path");
-
 let sec=0;
 let min=0;
 let secinner= document.querySelector(".sec");
@@ -71,15 +69,35 @@ const sendInstructionToArduino = async(instruction) => {
         });
     });
 };
-parser.on('data', (data) => {
-    console.log('Data received from Arduino:', data.trim());
-    fingerprintId = data.trim();
-    getStudent(fingerprintId);
-});
+const waitForDataFromArduino = () => {
+    return new Promise((resolve) => {
+        parser.once('data', (data) => {
+            console.log('Data received from Arduino:', data.trim());
+            resolve(data.trim());
+        });
+    });
+};
 let instruction;
-while(min!=10){
-    instruction = 1; 
-    sendInstructionToArduino(instruction);
-    parser.on();
-}
+const CALLING = async () => {
+    try {
+        // Send instruction to Arduino
+        await sendInstructionToArduino(instruction);
+
+        // Wait for data from Arduino
+        const fingerprintId = await waitForDataFromArduino();
+
+        // Process the received data
+        getStudent(fingerprintId);
+    } catch (err) {
+        console.error('Error during communication with Arduino:', err);
+    }
+};
+const startLoop = async () => {
+    while (min != 10) {
+        await CALLING();
+
+        // Add a delay of 1 second between iterations to prevent overwhelming the Arduino
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+};
 
