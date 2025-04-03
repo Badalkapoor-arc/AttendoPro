@@ -43,8 +43,7 @@ const getStudent=(fingerprintId)=>{
         <span>Semester: ${student.semester}</span>
         <span>Attendance: ${student.attendence}</span>
     </div>
-`;  let currentHeight=newinfoBar.clientHeight;
-    newinfoBar.style.height=(currentHeight+20)+"px";
+`;
 }
 // while(min!=10){
 //     fingerprintId;//get the fingerprintId from the fingerprint scanner
