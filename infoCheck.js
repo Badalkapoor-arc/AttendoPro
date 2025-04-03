@@ -5,19 +5,22 @@ let mininner= document.querySelector(".min");
 let newinfoBar = document.querySelector("#container");
 let timerFun=()=>{
     if(sec===59){
-            sec=0;
-            min++;
-            mininner.innerText=min;
-            if(min===10){
-                return;
-            }
+        sec=0;
+        min++;
+        mininner.innerText=min;
     }else{
         sec++;
         secinner.innerText=sec;
     }
 }
 setInterval(()=>{
-    timerFun();
+    if(min===10){
+        sec=0;
+        secinner.innerText=sec;
+        return;
+    }else{
+        timerFun();
+    }
 },1000);
 let fingerprintId;
 const getStudent=(fingerprintId)=>{
