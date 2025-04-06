@@ -48,82 +48,82 @@ const getStudent=(fingerprintId)=>{
     </div>
 `;
 }
-let port;
-let reader;
-const instruction = "v"; // Instruction to send to Arduino
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-let isConnected = false;
+// let port;
+// let reader;
+// const instruction = "v"; // Instruction to send to Arduino
+// const encoder = new TextEncoder();
+// const decoder = new TextDecoder();
+// let isConnected = false;
 
-// Function to connect to Arduino
-async function connectToArduino() {
-    try {
-        // Request the serial port from the user
-        port = await navigator.serial.requestPort(); // Manually select the port
+// // Function to connect to Arduino
+// async function connectToArduino() {
+//     try {
+//         // Request the serial port from the user
+//         port = await navigator.serial.requestPort(); // Manually select the port
 
-        // Open the port with the specified baud rate
-        await port.open({ baudRate: 9600 });
-        console.log("Connected to Arduino!");
+//         // Open the port with the specified baud rate
+//         await port.open({ baudRate: 9600 });
+//         console.log("Connected to Arduino!");
 
-        // Set up the reader for incoming data
-        reader = port.readable.getReader();
+//         // Set up the reader for incoming data
+//         reader = port.readable.getReader();
 
-        isConnected = true;
-    } catch (error) {
-        console.error("Error connecting to Arduino:", error);
+//         isConnected = true;
+//     } catch (error) {
+//         console.error("Error connecting to Arduino:", error);
 
-        // Notify the user if the connection fails
-        alert("Failed to connect to Arduino. Please check the connection and try again.");
-    }
-}
+//         // Notify the user if the connection fails
+//         alert("Failed to connect to Arduino. Please check the connection and try again.");
+//     }
+// }
 
-// Function to send instructions to Arduino
-async function sendInstructionToArduino(instruction) {
-    if (!isConnected || !port || !port.writable) {
-        console.error("Port is not open!");
-        return;
-    }
+// // Function to send instructions to Arduino
+// async function sendInstructionToArduino(instruction) {
+//     if (!isConnected || !port || !port.writable) {
+//         console.error("Port is not open!");
+//         return;
+//     }
 
-    const writer = port.writable.getWriter();
-    await writer.write(encoder.encode(instruction + "\n")); // Send the instruction
-    writer.releaseLock();
-    console.log("Sent to Arduino:", instruction);
-}
+//     const writer = port.writable.getWriter();
+//     await writer.write(encoder.encode(instruction + "\n")); // Send the instruction
+//     writer.releaseLock();
+//     console.log("Sent to Arduino:", instruction);
+// }
 
-// Function to wait for data from Arduino
-async function waitForDataFromArduino() {
-    if (!isConnected || !port || !port.readable) return null;
+// // Function to wait for data from Arduino
+// async function waitForDataFromArduino() {
+//     if (!isConnected || !port || !port.readable) return null;
 
-    try {
-        const { value, done } = await reader.read(); // Read data from Arduino
-        if (done) return null; // If the reader is closed, return null
-        return decoder.decode(value).trim(); // Decode the received data
-    } catch (error) {
-        console.error("Error reading from Arduino:", error);
-        return null;
-    } finally {
-        reader.releaseLock();
-    }
-}
+//     try {
+//         const { value, done } = await reader.read(); // Read data from Arduino
+//         if (done) return null; // If the reader is closed, return null
+//         return decoder.decode(value).trim(); // Decode the received data
+//     } catch (error) {
+//         console.error("Error reading from Arduino:", error);
+//         return null;
+//     } finally {
+//         reader.releaseLock();
+//     }
+// }
 
-// Function to handle communication with Arduino
-const CALLING = async () => {
-    try {
-        await sendInstructionToArduino(instruction); // Send the instruction
-        const fingerprintId = await waitForDataFromArduino(); // Wait for the response
-        if (fingerprintId) {
-            console.log("Fingerprint ID received:", fingerprintId);
-            getStudent(fingerprintId); // Process the received fingerprint ID
-        }
-    } catch (err) {
-        console.error("Error during communication with Arduino:", err);
-    }
-};
+// // Function to handle communication with Arduino
+// const CALLING = async () => {
+//     try {
+//         await sendInstructionToArduino(instruction); // Send the instruction
+//         const fingerprintId = await waitForDataFromArduino(); // Wait for the response
+//         if (fingerprintId) {
+//             console.log("Fingerprint ID received:", fingerprintId);
+//             getStudent(fingerprintId); // Process the received fingerprint ID
+//         }
+//     } catch (err) {
+//         console.error("Error during communication with Arduino:", err);
+//     }
+// };
 
-// Start Execution Immediately
-(async () => {
-    await connectToArduino(); // Connect to Arduino once
-    while (min != 10) { // Keep communicating until the timer reaches 10 minutes
-        await CALLING();
-    }
-})();
+// // Start Execution Immediately
+// (async () => {
+//     await connectToArduino(); // Connect to Arduino once
+//     while (min != 10) { // Keep communicating until the timer reaches 10 minutes
+//         await CALLING();
+//     }
+// })();
