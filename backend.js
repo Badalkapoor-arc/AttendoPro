@@ -5,7 +5,7 @@ let menuBar1 = document.querySelector('#menuBar1');
 let password = document.querySelector(".password");
 let submitBTN = document.querySelector('#btn');
 let form = document.querySelector("form");
-let passkey = "T20P16C3";
+let passkey ="T20P16C3";
 menuBTN.addEventListener('click',()=>{
     menuBar.setAttribute("id","menuBar1");
 });
@@ -38,4 +38,3 @@ submitBTN.addEventListener("click", () => {
         alert("Incorrect password or password field is empty");
     }
 });
-console.log(passkey.toString());

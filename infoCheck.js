@@ -48,56 +48,82 @@ const getStudent=(fingerprintId)=>{
     </div>
 `;
 }
-const port = new SerialPort({ path: 'COM4', baudRate: 9600 });
-const parser = async ()=>{
-    await port.pipe(new ReadlineParser({ delimiter: '\n' }));
-};
-const sendInstructionToArduino = async(instruction) => {
-    if (!instruction) {
-        console.error('No instruction provided to send to Arduino.');
+let port;
+let reader;
+const instruction = "v"; // Instruction to send to Arduino
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+let isConnected = false;
+
+// Function to connect to Arduino
+async function connectToArduino() {
+    try {
+        // Request the serial port from the user
+        port = await navigator.serial.requestPort(); // Manually select the port
+
+        // Open the port with the specified baud rate
+        await port.open({ baudRate: 9600 });
+        console.log("Connected to Arduino!");
+
+        // Set up the reader for incoming data
+        reader = port.readable.getReader();
+
+        isConnected = true;
+    } catch (error) {
+        console.error("Error connecting to Arduino:", error);
+
+        // Notify the user if the connection fails
+        alert("Failed to connect to Arduino. Please check the connection and try again.");
+    }
+}
+
+// Function to send instructions to Arduino
+async function sendInstructionToArduino(instruction) {
+    if (!isConnected || !port || !port.writable) {
+        console.error("Port is not open!");
         return;
     }
-    return new Promise((resolve, reject) => {
-        port.write(instruction + '\n', (err) => {
-            if (err) {
-                console.error('Error writing to Arduino:', err.message);
-                reject(err);
-            } else {
-                console.log('Instruction sent to Arduino:', instruction);
-                resolve();
-            }
-        });
-    });
-};
-const waitForDataFromArduino = () => {
-    return new Promise((resolve) => {
-        parser.once('data', (data) => {
-            console.log('Data received from Arduino:', data.trim());
-            resolve(data.trim());
-        });
-    });
-};
-let instruction;
+
+    const writer = port.writable.getWriter();
+    await writer.write(encoder.encode(instruction + "\n")); // Send the instruction
+    writer.releaseLock();
+    console.log("Sent to Arduino:", instruction);
+}
+
+// Function to wait for data from Arduino
+async function waitForDataFromArduino() {
+    if (!isConnected || !port || !port.readable) return null;
+
+    try {
+        const { value, done } = await reader.read(); // Read data from Arduino
+        if (done) return null; // If the reader is closed, return null
+        return decoder.decode(value).trim(); // Decode the received data
+    } catch (error) {
+        console.error("Error reading from Arduino:", error);
+        return null;
+    } finally {
+        reader.releaseLock();
+    }
+}
+
+// Function to handle communication with Arduino
 const CALLING = async () => {
     try {
-        // Send instruction to Arduino
-        await sendInstructionToArduino(instruction);
-
-        // Wait for data from Arduino
-        const fingerprintId = await waitForDataFromArduino();
-
-        // Process the received data
-        getStudent(fingerprintId);
+        await sendInstructionToArduino(instruction); // Send the instruction
+        const fingerprintId = await waitForDataFromArduino(); // Wait for the response
+        if (fingerprintId) {
+            console.log("Fingerprint ID received:", fingerprintId);
+            getStudent(fingerprintId); // Process the received fingerprint ID
+        }
     } catch (err) {
-        console.error('Error during communication with Arduino:', err);
+        console.error("Error during communication with Arduino:", err);
     }
 };
-const startLoop = async () => {
-    while (min != 10) {
+
+// Start Execution Immediately
+(async () => {
+    await connectToArduino(); // Connect to Arduino once
+    while (min != 10) { // Keep communicating until the timer reaches 10 minutes
         await CALLING();
-
-        // Add a delay of 1 second between iterations to prevent overwhelming the Arduino
-        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-};
-
+})();
