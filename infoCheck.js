@@ -22,6 +22,9 @@ setInterval(()=>{
         timerFun();
     }
 },1000);
+const addStudent=(name,rollno,branch,semester,fingerprintId,attendence)=>{
+    localStorage.setItem(fingerprintId,JSON.stringify({name:name, rollno: rollno,branch:branch,semester: semester,attendance:attendence}));
+}
 let fingerprintId;
 const getStudent=(fingerprintId)=>{
     let newDiv = document.createElement("div");
@@ -31,11 +34,13 @@ const getStudent=(fingerprintId)=>{
     }else{
         student = JSON.parse(student);
     }
+    NEWattendence = student.attendance;
+    NEWattendence = NEWattendence + 1;
+    addStudent(student.name,student.rollno,student.branch,student.semester,fingerprintId,NEWattendence); // Update attendance in local storage
     newinfoBar.append(newDiv);
     newDiv.id = `student-${fingerprintId}`;
     let Addinfo = document.querySelector(`#student-${fingerprintId}`);
     newDiv.className = "infoarea";
-    console.log(student.name);
     Addinfo.innerHTML = `
     <div class="container">
         <span>Name: ${student.name}</span>
@@ -44,7 +49,7 @@ const getStudent=(fingerprintId)=>{
     </div>
     <div class="container1">
         <span>Semester: ${student.semester}</span>
-        <span>Attendance: ${student.attendence}</span>
+        <span>Attendance: ${student.attendance}</span>
     </div>
 `;
 }
