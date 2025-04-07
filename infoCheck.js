@@ -53,6 +53,7 @@ const getStudent=(fingerprintId)=>{
     </div>
 `;
 }
+
 // let port;
 // let reader;
 // const instruction = "v"; // Instruction to send to Arduino

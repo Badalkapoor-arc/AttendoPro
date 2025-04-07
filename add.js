@@ -33,3 +33,26 @@ subBtn.addEventListener("click",()=>{
     passkey = document.querySelector("#password");
     newdetails();
 });
+// // Function to connect to Arduino and get the fingerprint ID
+// async function getFingerprintIDFromArduino() {
+//     try {
+//         // Send instruction to Arduino to take a fingerprint
+//         await sendInstructionToArduino("TAKE_FINGERPRINT");
+
+//         // Wait for the fingerprint ID from Arduino
+//         const fingerprintId = await waitForDataFromArduino();
+//         if (fingerprintId) {
+//             console.log("Fingerprint ID received:", fingerprintId);
+
+//             // Store the fingerprint ID in the global variable
+//             fingerprintID = fingerprintId;
+
+//             // Process the fingerprint ID (e.g., retrieve or add student details)
+//             newdetails();
+//         } else {
+//             console.error("No fingerprint ID received from Arduino.");
+//         }
+//     } catch (error) {
+//         console.error("Error during fingerprint handling:", error);
+//     }
+// }
