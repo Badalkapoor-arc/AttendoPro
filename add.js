@@ -33,26 +33,45 @@ subBtn.addEventListener("click",()=>{
     passkey = document.querySelector("#password");
     newdetails();
 });
-// // Function to connect to Arduino and get the fingerprint ID
-// async function getFingerprintIDFromArduino() {
-//     try {
-//         // Send instruction to Arduino to take a fingerprint
-//         await sendInstructionToArduino("TAKE_FINGERPRINT");
+//ardunio connect 
+// ARDUINO INTEGRATION FOR FINGERPRINT ENROLLMENT
+let port, reader, writer;
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
-//         // Wait for the fingerprint ID from Arduino
-//         const fingerprintId = await waitForDataFromArduino();
-//         if (fingerprintId) {
-//             console.log("Fingerprint ID received:", fingerprintId);
+async function connectToArduino() {
+    port = await navigator.serial.requestPort();
+    await port.open({ baudRate: 9600 });
+    writer = port.writable.getWriter();
+    reader = port.readable.getReader();
+}
 
-//             // Store the fingerprint ID in the global variable
-//             fingerprintID = fingerprintId;
+async function sendToArduino(msg) {
+    await writer.write(encoder.encode(msg + "\n"));
+}
 
-//             // Process the fingerprint ID (e.g., retrieve or add student details)
-//             newdetails();
-//         } else {
-//             console.error("No fingerprint ID received from Arduino.");
-//         }
-//     } catch (error) {
-//         console.error("Error during fingerprint handling:", error);
-//     }
-// }
+async function readFromArduino() {
+    const { value } = await reader.read();
+    return decoder.decode(value).trim();
+}
+
+// Modify subBtn event listener to connect to Arduino and enroll fingerprint
+subBtn.addEventListener("click", async () => {
+    passkey = document.querySelector("#password");
+    if (passkey.value === "T20P16C3") {
+        try {
+            await connectToArduino();
+            await sendToArduino("ENROLL"); // Ask Arduino to enroll fingerprint
+            const returnedID = await readFromArduino();
+            if (returnedID && returnedID.startsWith("f")) {
+                fingerprintID = returnedID; // Assign Arduino-generated ID
+            } else {
+                alert("Failed to get fingerprint ID from Arduino");
+                return;
+            }
+        } catch (e) {
+            alert("Error communicating with Arduino: " + e);
+            return;
+        }
+    }
+});

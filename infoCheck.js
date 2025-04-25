@@ -54,6 +54,77 @@ const getStudent=(fingerprintId)=>{
 `;
 }
 
+
+
+
+
+
+
+
+//ardunio connect
+// ARDUINO INTEGRATION FOR CHECKING FINGERPRINTS
+let port, reader, writer;
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+async function connectToArduino() {
+    port = await navigator.serial.requestPort();
+    await port.open({ baudRate: 9600 });
+    writer = port.writable.getWriter();
+    reader = port.readable.getReader();
+}
+
+async function sendToArduino(msg) {
+    await writer.write(encoder.encode(msg + "\n"));
+}
+
+async function readFromArduino() {
+    const { value } = await reader.read();
+    return decoder.decode(value).trim();
+}
+
+// Function to call Arduino, check fingerprint, and process attendance
+const CALLING = async () => {
+    await sendToArduino("CHECK");
+    const fingerprintId = await readFromArduino();
+    if (fingerprintId && fingerprintId !== "NOT_FOUND") {
+        console.log("Fingerprint ID received:", fingerprintId);
+        getStudent(fingerprintId); // Your existing function
+    }
+};
+
+// Automatically run attendance check loop after connecting
+(async () => {
+    try {
+        await connectToArduino();
+        while (min !== 10) {
+            await CALLING();
+        }
+    } catch (err) {
+        alert("Failed to connect to Arduino: " + err);
+    }
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // let port;
 // let reader;
 // const instruction = "v"; // Instruction to send to Arduino
