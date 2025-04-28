@@ -1,3 +1,61 @@
+//ardunio connect
+// ARDUINO INTEGRATION FOR CHECKING FINGERPRINTS
+// --- Arduino Connection Code for infoCheck.js ---
+
+//Info check
+// --- Arduino connection for InfoCheck (Checking fingerprint) ---
+
+let infoPort, infoReader, infoWriter;
+const infoEncoder = new TextEncoder();
+const infoDecoder = new TextDecoder();
+let fingerprintIdInfo = ""; // Store fingerprint ID received
+
+// Connect to Arduino manually
+async function connectArduinoForInfo() {
+    try {
+        infoPort = await navigator.serial.requestPort();
+        await infoPort.open({ baudRate: 9600 });
+        infoWriter = infoPort.writable.getWriter();
+        infoReader = infoPort.readable.getReader();
+        alert("Connected to Arduino for InfoCheck!");
+    } catch (error) {
+        alert("Failed to connect: " + error);
+    }
+}
+
+// Send "CHECK" and read fingerprint ID automatically
+async function checkFingerprint() {
+    if (!infoPort || !infoWriter) {
+        alert("Arduino not connected!");
+        return;
+    }
+
+    await infoWriter.write(infoEncoder.encode("CHECK\n")); // Send CHECK command
+
+    const { value } = await infoReader.read(); // Read response
+    const response = infoDecoder.decode(value).trim();
+    console.log("Arduino Response (Check):", response);
+
+    if (response.startsWith("f")) {
+        fingerprintIdInfo = response; // Save fingerprint ID
+        // Here you can call your getStudent(fingerprintIdInfo) if needed
+    } else {
+        alert("Fingerprint Not Found!");
+    }
+}
+
+// Attach button listeners
+const connectInfoButton = document.querySelector("#connectArduinoInfo");
+connectInfoButton.addEventListener("click", async () => {
+    await connectArduinoForInfo();
+});
+
+const checkButton = document.querySelector("#checkFingerprintButton");
+checkButton.addEventListener("click", async () => {
+    await checkFingerprint();
+});
+
+//main code 
 let sec=0;
 let min=0;
 let secinner= document.querySelector(".sec");
@@ -22,13 +80,12 @@ setInterval(()=>{
         timerFun();
     }
 },1000);
-const addStudent=(name,rollno,branch,semester,fingerprintId,attendence)=>{
-    localStorage.setItem(fingerprintId,JSON.stringify({name:name, rollno: rollno,branch:branch,semester: semester,attendance:attendence}));
+const addStudent=(name,rollno,branch,semester,fingerprintIdInfo,attendence)=>{
+    localStorage.setItem(fingerprintIdInfo,JSON.stringify({name:name, rollno: rollno,branch:branch,semester: semester,attendance:attendence}));
 }
-let fingerprintId;
-const getStudent=(fingerprintId)=>{
+const getStudent=(fingerprintIdInfo)=>{
     let newDiv = document.createElement("div");
-    let student =localStorage.getItem(fingerprintId);
+    let student =localStorage.getItem(fingerprintIdInfo);
     if(student==null){
         return;
     }else{
@@ -36,10 +93,10 @@ const getStudent=(fingerprintId)=>{
     }
     NEWattendence = student.attendance;
     NEWattendence = NEWattendence + 1;
-    addStudent(student.name,student.rollno,student.branch,student.semester,fingerprintId,NEWattendence); // Update attendance in local storage
+    addStudent(student.name,student.rollno,student.branch,student.semester,fingerprintIdInfo,NEWattendence); // Update attendance in local storage
     newinfoBar.append(newDiv);
-    newDiv.id = `student-${fingerprintId}`;
-    let Addinfo = document.querySelector(`#student-${fingerprintId}`);
+    newDiv.id = `student-${fingerprintIdInfo}`;
+    let Addinfo = document.querySelector(`#student-${fingerprintIdInfo}`);
     newDiv.className = "infoarea";
     Addinfo.innerHTML = `
     <div class="container">
@@ -53,64 +110,6 @@ const getStudent=(fingerprintId)=>{
     </div>
 `;
 }
-
-
-
-
-
-
-
-
-//ardunio connect
-// ARDUINO INTEGRATION FOR CHECKING FINGERPRINTS
-// --- Arduino Connection Code for infoCheck.js ---
-
-let infoPort, infoReader, infoWriter;
-const infoEncoder = new TextEncoder();
-const infoDecoder = new TextDecoder();
-
-async function connectArduinoForInfo() {
-    try {
-        infoPort = await navigator.serial.requestPort();
-        await infoPort.open({ baudRate: 9600 });
-        infoWriter = infoPort.writable.getWriter();
-        infoReader = infoPort.readable.getReader();
-        alert("Connected to Arduino (InfoCheck)!");
-    } catch (error) {
-        alert("Failed to connect for InfoCheck: " + error);
-    }
-}
-
-async function sendCheckToArduino() {
-    if (!infoPort || !infoWriter) {
-        alert("Arduino not connected!");
-        return;
-    }
-    await infoWriter.write(infoEncoder.encode("CHECK\n"));
-}
-
-async function readCheckResponseFromArduino() {
-    if (!infoPort || !infoReader) {
-        alert("Arduino not connected!");
-        return;
-    }
-    const { value } = await infoReader.read();
-    return infoDecoder.decode(value).trim();
-}
-
-// Connect button for InfoCheck
-const connectInfoButton = document.querySelector("#connectArduinoInfo");
-connectInfoButton.addEventListener("click", async () => {
-    await connectArduinoForInfo();
-});
-
-
-
-
-
-
-
-
 
 
 

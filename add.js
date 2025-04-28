@@ -9,7 +9,7 @@ let selectSemester;
 let passkey;
 let textAtten;
 let subBtn = document.querySelector(".button");
-let fingerprintID = "f1"; // Replace with the actual fingerprint ID you want to use
+let fingerprintID = fingerprintIdAdd; // Replace with the actual fingerprint ID you want to use
 let Student = JSON.parse(localStorage.getItem(fingerprintID));
 let prAtten = Student.attendance;
 const newdetails=()=>{
@@ -35,43 +35,55 @@ subBtn.addEventListener("click",()=>{
 });
 //ardunio connect 
 // ARDUINO INTEGRATION FOR FINGERPRINT ENROLLMENT
-// --- Arduino Connection Code for add.js ---
+//Add.js
+// --- Arduino connection for Add (Enrolling fingerprint) ---
 
 let addPort, addReader, addWriter;
 const addEncoder = new TextEncoder();
 const addDecoder = new TextDecoder();
+let fingerprintIdAdd = ""; // Store enrolled fingerprint ID
 
+// Connect to Arduino manually
 async function connectArduinoForAdd() {
     try {
         addPort = await navigator.serial.requestPort();
         await addPort.open({ baudRate: 9600 });
         addWriter = addPort.writable.getWriter();
         addReader = addPort.readable.getReader();
-        alert("Connected to Arduino (Add Fingerprint)!");
+        alert("Connected to Arduino for Adding Fingerprint!");
     } catch (error) {
-        alert("Failed to connect for adding fingerprint: " + error);
+        alert("Failed to connect: " + error);
     }
 }
 
-async function sendEnrollToArduino() {
+// Send "ENROLL" and read enrolled fingerprint ID automatically
+async function enrollFingerprint() {
     if (!addPort || !addWriter) {
         alert("Arduino not connected!");
         return;
     }
-    await addWriter.write(addEncoder.encode("ENROLL\n"));
-}
 
-async function readEnrollResponseFromArduino() {
-    if (!addPort || !addReader) {
-        alert("Arduino not connected!");
-        return;
+    await addWriter.write(addEncoder.encode("ENROLL\n")); // Send ENROLL command
+
+    const { value } = await addReader.read(); // Read response
+    const response = addDecoder.decode(value).trim();
+    console.log("Arduino Response (Enroll):", response);
+
+    if (response.startsWith("f")) {
+        fingerprintIdAdd = response; // Save fingerprint ID
+        alert("Fingerprint Enrolled with ID: " + fingerprintIdAdd);
+    } else {
+        alert("Enrollment Failed!");
     }
-    const { value } = await addReader.read();
-    return addDecoder.decode(value).trim();
 }
 
-// Connect button for Add
+// Attach button listeners
 const connectAddButton = document.querySelector("#connectArduinoAdd");
 connectAddButton.addEventListener("click", async () => {
     await connectArduinoForAdd();
+});
+
+const enrollButton = document.querySelector("#enrollFingerprintButton");
+enrollButton.addEventListener("click", async () => {
+    await enrollFingerprint();
 });
