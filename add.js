@@ -35,43 +35,43 @@ subBtn.addEventListener("click",()=>{
 });
 //ardunio connect 
 // ARDUINO INTEGRATION FOR FINGERPRINT ENROLLMENT
-let port, reader, writer;
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
+// --- Arduino Connection Code for add.js ---
 
-async function connectToArduino() {
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 9600 });
-    writer = port.writable.getWriter();
-    reader = port.readable.getReader();
-}
+let addPort, addReader, addWriter;
+const addEncoder = new TextEncoder();
+const addDecoder = new TextDecoder();
 
-async function sendToArduino(msg) {
-    await writer.write(encoder.encode(msg + "\n"));
-}
-
-async function readFromArduino() {
-    const { value } = await reader.read();
-    return decoder.decode(value).trim();
-}
-
-// Modify subBtn event listener to connect to Arduino and enroll fingerprint
-subBtn.addEventListener("click", async () => {
-    passkey = document.querySelector("#password");
-    if (passkey.value === "T20P16C3") {
-        try {
-            await connectToArduino();
-            await sendToArduino("ENROLL"); // Ask Arduino to enroll fingerprint
-            const returnedID = await readFromArduino();
-            if (returnedID && returnedID.startsWith("f")) {
-                fingerprintID = returnedID; // Assign Arduino-generated ID
-            } else {
-                alert("Failed to get fingerprint ID from Arduino");
-                return;
-            }
-        } catch (e) {
-            alert("Error communicating with Arduino: " + e);
-            return;
-        }
+async function connectArduinoForAdd() {
+    try {
+        addPort = await navigator.serial.requestPort();
+        await addPort.open({ baudRate: 9600 });
+        addWriter = addPort.writable.getWriter();
+        addReader = addPort.readable.getReader();
+        alert("Connected to Arduino (Add Fingerprint)!");
+    } catch (error) {
+        alert("Failed to connect for adding fingerprint: " + error);
     }
+}
+
+async function sendEnrollToArduino() {
+    if (!addPort || !addWriter) {
+        alert("Arduino not connected!");
+        return;
+    }
+    await addWriter.write(addEncoder.encode("ENROLL\n"));
+}
+
+async function readEnrollResponseFromArduino() {
+    if (!addPort || !addReader) {
+        alert("Arduino not connected!");
+        return;
+    }
+    const { value } = await addReader.read();
+    return addDecoder.decode(value).trim();
+}
+
+// Connect button for Add
+const connectAddButton = document.querySelector("#connectArduinoAdd");
+connectAddButton.addEventListener("click", async () => {
+    await connectArduinoForAdd();
 });
