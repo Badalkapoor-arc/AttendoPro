@@ -1,59 +1,60 @@
-//ardunio connect
-// ARDUINO INTEGRATION FOR CHECKING FINGERPRINTS
-// --- Arduino Connection Code for infoCheck.js ---
 
-//Info check
-// --- Arduino connection for InfoCheck (Checking fingerprint) ---
+// ARDUINO INTEGRATION FOR FINGERPRINT CHECK (Check.js)
 
-let infoPort, infoReader, infoWriter;
-const infoEncoder = new TextEncoder();
-const infoDecoder = new TextDecoder();
-let fingerprintIdInfo = ""; // Store fingerprint ID received
+let checkPort, checkReader, checkWriter;
+const checkEncoder = new TextEncoder();
+const checkDecoder = new TextDecoder();
 
 // Connect to Arduino manually
-async function connectArduinoForInfo() {
+async function connectArduinoForCheck() {
     try {
-        infoPort = await navigator.serial.requestPort();
-        await infoPort.open({ baudRate: 9600 });
-        infoWriter = infoPort.writable.getWriter();
-        infoReader = infoPort.readable.getReader();
-        alert("Connected to Arduino for InfoCheck!");
+        checkPort = await navigator.serial.requestPort();
+        await checkPort.open({ baudRate: 9600 });
+        checkWriter = checkPort.writable.getWriter();
+        checkReader = checkPort.readable.getReader();
+        alert("Connected to Arduino for Checking Fingerprint!");
     } catch (error) {
         alert("Failed to connect: " + error);
     }
 }
 
-// Send "CHECK" and read fingerprint ID automatically
+// Send "CHECK" and read the fingerprint ID
+const textDecoder = new TextDecoder();
+
 async function checkFingerprint() {
-    if (!infoPort || !infoWriter) {
-        alert("Arduino not connected!");
-        return;
-    }
+  await checkWriter.write(checkEncoder.encode("CHECK\n"));
+  const { value, done } = await checkReader.read();
 
-    await infoWriter.write(infoEncoder.encode("CHECK\n")); // Send CHECK command
+  if (value) {
+    const responseText = textDecoder.decode(value);
+    console.log("Response:", responseText);
 
-    const { value } = await infoReader.read(); // Read response
-    const response = infoDecoder.decode(value).trim();
-    console.log("Arduino Response (Check):", response);
-
-    if (response.startsWith("f")) {
-        fingerprintIdInfo = response; // Save fingerprint ID
-        getStudent(fingerprintIdInfo);
+    const id = extractId(responseText);
+    if (id !== null) {
+      console.log("Extracted ID:", id);
+      getStudent(id); // Call getStudent with the extracted ID
+      // Do something with ID (like mark attendance)
     } else {
-        alert("Fingerprint Not Found!");
+      console.log("No ID found.");
     }
+  }
+}
+
+function extractId(response) {
+  const match = response.match(/(?:FOUND_ID|EXISTING_ID):f(\d+)/);
+  if (match) {
+    return Number(match[1]);
+  } else {
+    return null;
+  }
 }
 
 // Attach button listeners
-const connectInfoButton = document.querySelector("#connectArduinoInfo");
-connectInfoButton.addEventListener("click", async () => {
-    await connectArduinoForInfo();
-});
+const connectCheckButton = document.querySelector("#connectArduinoInfo");
+connectCheckButton.addEventListener("click", connectArduinoForCheck);
 
 const checkButton = document.querySelector("#checkFingerprintButton");
-checkButton.addEventListener("click", async () => {
-    await checkFingerprint();
-});
+checkButton.addEventListener("click", checkFingerprint);
 
 //main code 
 let sec=0;
@@ -110,88 +111,3 @@ const getStudent=(fingerprintIdInfo)=>{
     </div>
 `;
 }
-
-
-
-
-
-
-// let port;
-// let reader;
-// const instruction = "v"; // Instruction to send to Arduino
-// const encoder = new TextEncoder();
-// const decoder = new TextDecoder();
-// let isConnected = false;
-
-// // Function to connect to Arduino
-// async function connectToArduino() {
-//     try {
-//         // Request the serial port from the user
-//         port = await navigator.serial.requestPort(); // Manually select the port
-
-//         // Open the port with the specified baud rate
-//         await port.open({ baudRate: 9600 });
-//         console.log("Connected to Arduino!");
-
-//         // Set up the reader for incoming data
-//         reader = port.readable.getReader();
-
-//         isConnected = true;
-//     } catch (error) {
-//         console.error("Error connecting to Arduino:", error);
-
-//         // Notify the user if the connection fails
-//         alert("Failed to connect to Arduino. Please check the connection and try again.");
-//     }
-// }
-
-// // Function to send instructions to Arduino
-// async function sendInstructionToArduino(instruction) {
-//     if (!isConnected || !port || !port.writable) {
-//         console.error("Port is not open!");
-//         return;
-//     }
-
-//     const writer = port.writable.getWriter();
-//     await writer.write(encoder.encode(instruction + "\n")); // Send the instruction
-//     writer.releaseLock();
-//     console.log("Sent to Arduino:", instruction);
-// }
-
-// // Function to wait for data from Arduino
-// async function waitForDataFromArduino() {
-//     if (!isConnected || !port || !port.readable) return null;
-
-//     try {
-//         const { value, done } = await reader.read(); // Read data from Arduino
-//         if (done) return null; // If the reader is closed, return null
-//         return decoder.decode(value).trim(); // Decode the received data
-//     } catch (error) {
-//         console.error("Error reading from Arduino:", error);
-//         return null;
-//     } finally {
-//         reader.releaseLock();
-//     }
-// }
-
-// // Function to handle communication with Arduino
-// const CALLING = async () => {
-//     try {
-//         await sendInstructionToArduino(instruction); // Send the instruction
-//         const fingerprintId = await waitForDataFromArduino(); // Wait for the response
-//         if (fingerprintId) {
-//             console.log("Fingerprint ID received:", fingerprintId);
-//             getStudent(fingerprintId); // Process the received fingerprint ID
-//         }
-//     } catch (err) {
-//         console.error("Error during communication with Arduino:", err);
-//     }
-// };
-
-// // Start Execution Immediately
-// (async () => {
-//     await connectToArduino(); // Connect to Arduino once
-//     while (min != 10) { // Keep communicating until the timer reaches 10 minutes
-//         await CALLING();
-//     }
-// })();
