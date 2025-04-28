@@ -38,7 +38,7 @@ async function checkFingerprint() {
 
     if (response.startsWith("f")) {
         fingerprintIdInfo = response; // Save fingerprint ID
-        // Here you can call your getStudent(fingerprintIdInfo) if needed
+        getStudent(fingerprintIdInfo);
     } else {
         alert("Fingerprint Not Found!");
     }
