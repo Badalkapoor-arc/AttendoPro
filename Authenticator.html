@@ -8,26 +8,51 @@
     <link rel="stylesheet" href="authenticator.css">
 </head>
 <body>
-    <div class="login-container">
-        <div id="head">Authenticator</div>
-        <Hr>
-        <form id="loginForm" method="POST" action="/submit-login">
-                <label for="username">Name:</label>
-                <input type="text" id="username" name="username" placeholder="Name" required />
-                <span>Age:</span>
-                <span>Date Of Birth:</span>
-                <input type="textarea" class="age" placeholder="Age">
-                <input type="textarea" class="dob" placeholder="DD/MM/YYYY">
-            <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Password" required />
-            <label for="Email">Email:</label>
-            <input type="textarea" id="Email" placeholder="abc@gmail.com" required />
-            <button type="submit">Submit</button>
-        </form>
+  <h1>Browser LocalStorage Viewer</h1>
+  <table id="storageTable" cellspacing=".001px" cellpadding="0" HSPACE="1000px" VSPACE="10px" border="1px" width="100%">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Roll NO.</th>
+        <th>Branch</th>
+        <th>Attendance</th>
+        <th>Semester</th>
+      </tr>
+    </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div>
+        <div class="orange" id="loc"></div>
+        <div class="orange" id="loc1"></div>
+        <div class="orange" id="loc2"></div>
+        <div class="orange" id="loc3"></div>
     </div>
-    <div class="orange" id="loc"></div>
-    <div class="orange" id="loc1"></div>
-    <div class="orange" id="loc2"></div>
-    <div class="orange" id="loc3"></div>
+<script>
+    const tableBody = document.querySelector('#storageTable tbody');
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        const matches = [...value.matchAll(/:([^,]+)/g)];
+        const values = matches.map(match => match[1]).join(', ');
+        const name = (matches[0]?.[1] || '').replace(/["{}]/g, '');
+        const rollno = (matches[1]?.[1] || '').replace(/["{}]/g, '');
+        const semester = (matches[2]?.[1] || '').replace(/["{}]/g, '');
+        const branch = (matches[3]?.[1] || '').replace(/["{}]/g, '');
+        const attendance = (matches[4]?.[1] || '').replace(/["{}]/g, '');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${key}</td>
+            <td>${name}</td>
+            <td>${rollno}</td>
+            <td>${branch}</td>
+            <td>${attendance}</td>
+            <td>${semester}</td>
+        `;
+        tableBody.appendChild(row);
+    }
+
+</script>
 </body>
 </html>

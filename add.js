@@ -1,12 +1,7 @@
-// ARDUINO INTEGRATION FOR FINGERPRINT ENROLLMENT (Add.js)
-
-
 let addPort, addReader, addWriter;
 let enrolledId = null;
 const addEncoder = new TextEncoder();
 const addDecoder = new TextDecoder();
-
-// Connect to Arduino manually
 async function connectArduinoForAdd() {
     try {
         addPort = await navigator.serial.requestPort();
@@ -18,10 +13,8 @@ async function connectArduinoForAdd() {
         alert("Failed to connect: " + error);
     }
 }
-
-// Send "ENROLL" and read enrolled fingerprint ID
 async function enrollFingerprint() {
-    enrolledId = null; // Reset enrolledId before starting the enrollment process
+    enrolledId = null;
     if (!addPort || !addWriter || !addReader) {
         alert("Arduino not connected or reader not available!");
         return;
@@ -69,15 +62,12 @@ async function enrollFingerprint() {
         if (addReader) addReader.releaseLock();
     }
 }
-
-// Attach button listeners
 const connectAddButton = document.querySelector("#connectArduinoAdd");
 connectAddButton.addEventListener("click", connectArduinoForAdd);
 
 const enrollButton = document.querySelector("#enrollFingerprintButton");
 enrollButton.addEventListener("click", enrollFingerprint);
-//MAIN CODE 
-//update and add the value of fingerprintId in local storage
+
 const addStudent=(name,rollno,branch,semester,enrolledId,attendence)=>{
     localStorage.setItem(enrolledId,JSON.stringify({name:name, rollno: rollno,branch:branch,semester: semester,enrolledId:enrolledId,attendance:attendence}));
 }
