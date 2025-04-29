@@ -1,11 +1,7 @@
-
-// ARDUINO INTEGRATION FOR FINGERPRINT CHECK (Check.js)
-
 let checkPort, checkReader, checkWriter;
 const checkEncoder = new TextEncoder();
 const checkDecoder = new TextDecoder();
 
-// Connect to Arduino manually
 async function connectArduinoForCheck() {
     try {
         checkPort = await navigator.serial.requestPort();
@@ -17,10 +13,7 @@ async function connectArduinoForCheck() {
         alert("Failed to connect: " + error);
     }
 }
-
-// Send "CHECK" and read the fingerprint ID
 const textDecoder = new TextDecoder();
-
 async function checkFingerprint() {
   await checkWriter.write(checkEncoder.encode("CHECK\n"));
   const { value, done } = await checkReader.read();
@@ -32,8 +25,7 @@ async function checkFingerprint() {
     const id = extractId(responseText);
     if (id !== null) {
       console.log("Extracted ID:", id);
-      getStudent(id); // Call getStudent with the extracted ID
-      // Do something with ID (like mark attendance)
+      getStudent(id);
     } else {
       console.log("No ID found.");
     }
@@ -49,14 +41,11 @@ function extractId(response) {
   }
 }
 
-// Attach button listeners
 const connectCheckButton = document.querySelector("#connectArduinoInfo");
 connectCheckButton.addEventListener("click", connectArduinoForCheck);
 
 const checkButton = document.querySelector("#checkFingerprintButton");
 checkButton.addEventListener("click", checkFingerprint);
-
-//main code 
 let sec=0;
 let min=0;
 let secinner= document.querySelector(".sec");
